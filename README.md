@@ -1,7 +1,7 @@
 # Dynamic Stopper — Autowalk + Runtime Pauses/Sidestep + Photos
 
 Inject **dynamic behavior** into a recorded Autowalk mission on Boston Dynamics Spot:  
-pause every _M_ meters, take photos, perform lateral sidesteps (left/right/alternate), and hook in a background
+pause every X meters, take photos, perform lateral sidesteps (left/right/alternate), and hook in a background
 thread (e.g., for YOLO). The robot still benefits from Spot’s obstacle avoidance, while GraphNav keeps it localized
 and on route.
 NOTE: Based on the documentation https://dev.bostondynamics.com/
