@@ -1,4 +1,4 @@
-# Dynamic Stopper — Autowalk + Runtime Pauses/Sidestep + Photos
+## Dynamic Stopper — Autowalk + Runtime Pauses/Sidestep + Photos
 
 Inject **dynamic behavior** into a recorded Autowalk mission on Boston Dynamics Spot:  
 pause every X meters, take photos, perform lateral sidesteps (left/right/alternate), and hook in a background
@@ -30,7 +30,7 @@ NOTE: Based on the documentation https://dev.bostondynamics.com/
 ```bash
 pip install bosdyn-client bosdyn-mission protobuf numpy opencv-python
 
-Imports used
+## Imports used
 
 Stdlib: argparse, logging, math, os, sys, time, threading, typing
 
