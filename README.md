@@ -4,14 +4,14 @@ This repository contains a Python script extending Boston Dynamics Spot’s Auto
 It allows you to take a recorded Autowalk and inject runtime maneuvers such as **periodic pauses, lateral sidesteps, image capture, and background tasks** (e.g., lightweight YOLO detection threads).  
 
 Developed for research and experimental purposes in the context of autonomous robotics and dynamic navigation.  
-📖 Based on the [Boston Dynamics Developer Documentation](https://dev.bostondynamics.com/).  
+Based on the [Boston Dynamics Developer Documentation](https://dev.bostondynamics.com/).  
 
 ---
 
 ## Features
 
 ### 1. Periodic Dynamic Pauses  
-Stop the robot every *M* meters for *N* seconds using ODOM tracking and keepalive control.  
+Stop the robot every *X* meters for *N* seconds using ODOM tracking and keepalive control.  
 
 ### 2. Lateral Sidestep Maneuvers  
 Shift sideways by a configurable distance (+left / -right / alternate).  
@@ -87,7 +87,7 @@ On detection: stop → capture → sidestep → resume mission.
 
 ---
 
-## 🛡️ Tips & Safety
+## Tips & Safety
 
 - Prefer **cooperative lease sharing** in production instead of `take()`.  
 - Test in clear areas before deploying.  
@@ -110,26 +110,47 @@ On detection: stop → capture → sidestep → resume mission.
 
 ```json
 {
-  "name": "DynamicStopper — sidestep + light BG load",
-  "program": "examples/dynamic_stopper.py",
-  "args": [
-    "--hostname", "10.0.0.3",
-    "--walk_directory", "recordings/Vasilis_Outside_22_08_2025_Test2.walk",
-    "--walk_filename", "Vasilis_Outside_22_08_2025_Test2.walk",
-    "--stop-every-m", "5.0",
-    "--pause-sec", "2.0",
-    "--sidestep-m", "1",
-    "--sidestep-speed", "0.3",
-    "--sidestep-mode", "alternate",
-    "--save-images",
-    "--image-sources", "frontleft_fisheye_image",
-    "--image-sources", "frontright_fisheye_image",
-    "--save-dir", "recordings/.../captures",
-    "--bg-load-pct", "0.10",
-    "--bg-cycle-ms", "100"
-  ],
-  "env": {
-    "BOSDYN_USERNAME": "",
-    "BOSDYN_PASSWORD": ""
-  }
+  "version": "0.2.0",                      // Debug configuration schema version
+  "configurations": [
+    {
+      "name": "DynamicStopper — sidestep + light BG load",   // Display name in VS Code debugger
+      "type": "debugpy",                 // Python debug adapter
+      "request": "launch",               // Launch a new process (not attach)
+      "program": "${workspaceFolder}/examples/dynamic_stopper.py",  // Script entrypoint
+      "console": "externalTerminal",     // Use an external terminal for I/O
+      "cwd": "${workspaceFolder}",       // Working directory set to repo root
+
+      "args": [
+        "--hostname", "",        // Spot robot hostname or IP (CHANGE this!)
+        "--walk_directory", "${workspaceFolder}/",  // Path to your .walk folder (CHANGE this!)
+        "--walk_filename", "",  // Walk mission file inside /missions (CHANGE or keep default)
+
+        "--stop-every-m", "5.0",         // Pause trigger distance in meters
+        "--pause-sec", "2.0",            // Pause duration in seconds
+        "--mission-timeout", "2.0",      // Keepalive timeout (seconds)
+
+        "--sidestep-m", "1",             // Lateral shift distance in meters (+ left, - right)
+        "--sidestep-speed", "0.3",       // Sidestep velocity in m/s
+        "--sidestep-mode", "alternate",  // Sidestep policy: alternate | left | right
+
+        // Optional photo capture section
+        "--save-images",                                // Enable image saving
+        "--image-sources", "frontleft_fisheye_image",   // Camera source 1
+        "--image-sources", "frontright_fisheye_image",  // Camera source 2
+        "--jpeg-quality-percent", "85",                 // JPEG quality (0–100)
+        "--save-dir", "${workspaceFolder}/",  // Output folder for images
+
+        // Optional background CPU load (simulates inference threads)
+        "--bg-load-pct", "0.10",        // Fraction of CPU time (10% here). 0 disables.
+        "--bg-cycle-ms", "100"          // Cycle length in ms (100 ms here)
+      ],
+
+      "env": {
+        "BOSDYN_USERNAME": "",          // Spot username (set in env or here)
+        "BOSDYN_PASSWORD": ""           // Spot password (set in env or here)
+      }
+    }
+  ]
 }
+
+
